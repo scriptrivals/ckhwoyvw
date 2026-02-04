@@ -16,10 +16,19 @@ end
 local THICK = 2
 local BASE = 30
 local AMP = 15
+
 local ROT_SPEED = 290
 local RAINBOW_SPEED = 0.25
-local GAP = 13
+
+-- GAP breathing (giống video)
+local GAP_BASE = 13
+local GAP_AMP = 8
+local GAP_SPEED = 4.2
+
 local BREATH_SPEED = 4.1
+
+-- Text offset
+local TEXT_OFFSET = 16 -- khoảng cách thêm để chữ không dính crosshair
 -- =========================================
 
 -- GUI
@@ -61,16 +70,15 @@ end
 
 -- Lines
 local lines = {}
-lines[1] = newLine(UDim2.fromOffset(THICK, BASE), UDim2.fromOffset(0, -(BASE/2 + GAP)))
-lines[2] = newLine(UDim2.fromOffset(THICK, BASE), UDim2.fromOffset(0,  (BASE/2 + GAP)))
-lines[3] = newLine(UDim2.fromOffset(BASE, THICK), UDim2.fromOffset(-(BASE/2 + GAP), 0))
-lines[4] = newLine(UDim2.fromOffset(BASE, THICK), UDim2.fromOffset( (BASE/2 + GAP), 0))
+lines[1] = newLine(UDim2.fromOffset(THICK, BASE), UDim2.fromOffset(0, -(BASE/2 + GAP_BASE)))
+lines[2] = newLine(UDim2.fromOffset(THICK, BASE), UDim2.fromOffset(0,  (BASE/2 + GAP_BASE)))
+lines[3] = newLine(UDim2.fromOffset(BASE, THICK), UDim2.fromOffset(-(BASE/2 + GAP_BASE), 0))
+lines[4] = newLine(UDim2.fromOffset(BASE, THICK), UDim2.fromOffset( (BASE/2 + GAP_BASE), 0))
 
 -- ================= TEXT =================
 local label = Instance.new("TextLabel")
 label.Text = "Yokai.win"
 label.AnchorPoint = Vector2.new(0.5, 0)
-label.Position = UDim2.fromOffset(0, 60)
 label.Size = UDim2.fromOffset(150, 18)
 label.BackgroundTransparency = 1
 label.TextScaled = false
@@ -94,31 +102,37 @@ RunService.RenderStepped:Connect(function(dt)
     -- Rotation
     rotator.Rotation = rotator.Rotation + ROT_SPEED * dt
 
-    -- Smooth breathing (đều – không rung)
+    -- Breathing length
     local breath = math.sin(time * BREATH_SPEED)
     local len = BASE + breath * AMP
 
+    -- Breathing GAP (giống video)
+    local gapBreath = math.sin(time * GAP_SPEED)
+    local gap = GAP_BASE + gapBreath * GAP_AMP
+
     -- UP
     lines[1].Size = UDim2.fromOffset(THICK, len)
-    lines[1].Position = UDim2.fromOffset(0, -(len / 2 + GAP))
+    lines[1].Position = UDim2.fromOffset(0, -(len / 2 + gap))
 
     -- DOWN
     lines[2].Size = UDim2.fromOffset(THICK, len)
-    lines[2].Position = UDim2.fromOffset(0, (len / 2 + GAP))
+    lines[2].Position = UDim2.fromOffset(0, (len / 2 + gap))
 
     -- LEFT
     lines[3].Size = UDim2.fromOffset(len, THICK)
-    lines[3].Position = UDim2.fromOffset(-(len / 2 + GAP), 0)
+    lines[3].Position = UDim2.fromOffset(-(len / 2 + gap), 0)
 
     -- RIGHT
     lines[4].Size = UDim2.fromOffset(len, THICK)
-    lines[4].Position = UDim2.fromOffset((len / 2 + GAP), 0)
+    lines[4].Position = UDim2.fromOffset((len / 2 + gap), 0)
 
     -- Apply color
     for i = 1, #lines do
         lines[i].BackgroundColor3 = color
     end
 
+    -- Text color + auto xuống theo crosshair (KHÔNG dính)
     label.TextColor3 = color
+    label.Position = UDim2.fromOffset(0, (len / 2) + gap + TEXT_OFFSET)
 end)
 -- =============================================
