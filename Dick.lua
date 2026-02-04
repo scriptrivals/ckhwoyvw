@@ -15,11 +15,11 @@ end
 -- ================= CONFIG =================
 local THICK = 2
 local BASE = 30
-local AMP = 13
+local AMP = 15
 local ROT_SPEED = 290
 local RAINBOW_SPEED = 0.25
 local GAP = 13
-local BREATH_SPEED = 3.6
+local BREATH_SPEED = 4.1
 -- =========================================
 
 -- GUI
