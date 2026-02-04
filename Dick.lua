@@ -14,19 +14,20 @@ end
 
 -- ================= CONFIG =================
 local THICK = 2
-local BASE = 30
-local AMP = 15
 
+-- Crosshair breathing
+local BASE = 30
+local AMP = 16
+local BREATH_SPEED = 4.2
+
+-- Rotation & color
 local ROT_SPEED = 290
 local RAINBOW_SPEED = 0.25
 
--- GAP breathing
+-- GAP sync với crosshair
 local GAP_BASE = 13
-local GAP_AMP = 8
-local GAP_SPEED = 4.2
-local GAP_MIN = 12 -- ❗ KHÔNG cho gap nhỏ hơn 10
-
-local BREATH_SPEED = 4.1
+local GAP_AMP = 7
+local GAP_MIN = 10
 -- =========================================
 
 -- GUI
@@ -77,11 +78,11 @@ lines[4] = newLine(UDim2.fromOffset(BASE, THICK), UDim2.fromOffset( (BASE/2 + GA
 local label = Instance.new("TextLabel")
 label.Text = "Yokai.win"
 label.AnchorPoint = Vector2.new(0.5, 0)
-label.Position = UDim2.fromOffset(0, 65) -- ✅ CỐ ĐỊNH, không chạy theo crosshair
-label.Size = UDim2.fromOffset(160, 22)
+label.Position = UDim2.fromOffset(0, 68)
+label.Size = UDim2.fromOffset(180, 26)
 label.BackgroundTransparency = 1
 label.TextScaled = false
-label.TextSize = 14 -- 🔼 chữ to hơn
+label.TextSize = 17 -- 🔥 TO HƠN NỮA
 label.Font = Enum.Font.Arcade
 label.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
 label.TextStrokeTransparency = 0
@@ -92,23 +93,21 @@ label.Parent = center
 local time = 0
 
 RunService.RenderStepped:Connect(function(dt)
-    time = time + dt
+    time += dt
 
-    -- Rainbow color
+    -- Color
     local hue = (tick() * RAINBOW_SPEED) % 1
     local color = Color3.fromHSV(hue, 1, 1)
 
     -- Rotation
-    rotator.Rotation = rotator.Rotation + ROT_SPEED * dt
+    rotator.Rotation += ROT_SPEED * dt
 
-    -- Length breathing
+    -- ONE breathing for ALL
     local breath = math.sin(time * BREATH_SPEED)
-    local len = BASE + breath * AMP
 
-    -- GAP breathing + CLAMP
-    local gapBreath = math.sin(time * GAP_SPEED)
-    local gap = GAP_BASE + gapBreath * GAP_AMP
-    gap = math.max(gap, GAP_MIN) -- ❗ khóa không cho dưới 10
+    local len = BASE + breath * AMP
+    local gap = GAP_BASE + breath * GAP_AMP
+    gap = math.max(gap, GAP_MIN)
 
     -- UP
     lines[1].Size = UDim2.fromOffset(THICK, len)
@@ -130,7 +129,6 @@ RunService.RenderStepped:Connect(function(dt)
     for i = 1, #lines do
         lines[i].BackgroundColor3 = color
     end
-
     label.TextColor3 = color
 end)
 -- =============================================
