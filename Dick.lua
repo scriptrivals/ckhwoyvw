@@ -76,7 +76,7 @@ lines[4] = newLine(UDim2.fromOffset(BASE, THICK), UDim2.fromOffset( (BASE/2 + GA
 
 -- ================= TEXT =================
 local label = Instance.new("TextLabel")
-label.Text = "Yokai.win"
+label.Text = "Rose.win"
 label.AnchorPoint = Vector2.new(0.5, 0)
 label.Position = UDim2.fromOffset(0, 68)
 label.Size = UDim2.fromOffset(180, 26)
