@@ -1,5 +1,5 @@
 -- Plus Crosshair - Full Smooth Version
--- Yokai.win
+-- Rose.win-no chatgpt entered,just code these to remem easily than!
 
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
