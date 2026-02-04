@@ -20,15 +20,13 @@ local AMP = 15
 local ROT_SPEED = 290
 local RAINBOW_SPEED = 0.25
 
--- GAP breathing (giống video)
+-- GAP breathing
 local GAP_BASE = 13
 local GAP_AMP = 8
 local GAP_SPEED = 4.2
+local GAP_MIN = 12 -- ❗ KHÔNG cho gap nhỏ hơn 10
 
 local BREATH_SPEED = 4.1
-
--- Text offset
-local TEXT_OFFSET = 16 -- khoảng cách thêm để chữ không dính crosshair
 -- =========================================
 
 -- GUI
@@ -79,10 +77,11 @@ lines[4] = newLine(UDim2.fromOffset(BASE, THICK), UDim2.fromOffset( (BASE/2 + GA
 local label = Instance.new("TextLabel")
 label.Text = "Yokai.win"
 label.AnchorPoint = Vector2.new(0.5, 0)
-label.Size = UDim2.fromOffset(150, 18)
+label.Position = UDim2.fromOffset(0, 65) -- ✅ CỐ ĐỊNH, không chạy theo crosshair
+label.Size = UDim2.fromOffset(160, 22)
 label.BackgroundTransparency = 1
 label.TextScaled = false
-label.TextSize = 12
+label.TextSize = 14 -- 🔼 chữ to hơn
 label.Font = Enum.Font.Arcade
 label.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
 label.TextStrokeTransparency = 0
@@ -102,13 +101,14 @@ RunService.RenderStepped:Connect(function(dt)
     -- Rotation
     rotator.Rotation = rotator.Rotation + ROT_SPEED * dt
 
-    -- Breathing length
+    -- Length breathing
     local breath = math.sin(time * BREATH_SPEED)
     local len = BASE + breath * AMP
 
-    -- Breathing GAP (giống video)
+    -- GAP breathing + CLAMP
     local gapBreath = math.sin(time * GAP_SPEED)
     local gap = GAP_BASE + gapBreath * GAP_AMP
+    gap = math.max(gap, GAP_MIN) -- ❗ khóa không cho dưới 10
 
     -- UP
     lines[1].Size = UDim2.fromOffset(THICK, len)
@@ -131,8 +131,6 @@ RunService.RenderStepped:Connect(function(dt)
         lines[i].BackgroundColor3 = color
     end
 
-    -- Text color + auto xuống theo crosshair (KHÔNG dính)
     label.TextColor3 = color
-    label.Position = UDim2.fromOffset(0, (len / 2) + gap + TEXT_OFFSET)
 end)
 -- =============================================
